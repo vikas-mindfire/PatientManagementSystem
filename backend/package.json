@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "The backend for the patient management system",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vikas-mindfire/PatientManagementSystem.git"
+  },
+  "keywords": [
+    "Node",
+    "Express"
+  ],
+  "author": "Vikas Passi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vikas-mindfire/PatientManagementSystem/issues"
+  },
+  "homepage": "https://github.com/vikas-mindfire/PatientManagementSystem#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}
