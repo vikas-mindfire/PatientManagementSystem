@@ -1,6 +1,8 @@
-const getPatients = (req, res) => {
+const asyncHanlder = require('express-async-handler');
+
+const getPatients = asyncHanlder(async (req, res) => {
   res.status(200).json({message: 'Get Patients'})
-}
+});
 
 const createPatients = (req, res) => {
   res.status(200).json({message: 'Create Patients'})
