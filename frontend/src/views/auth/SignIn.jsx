@@ -2,8 +2,12 @@ import InputField from "components/fields/InputField";
 // import { FcGoogle } from "react-icons/fc";
 import Checkbox from "components/checkbox";
 import { Link } from "react-router-dom";
+import useAuth from "hooks/useAuth";
 
 export default function SignIn() {
+
+  const { handleSignInChange, handleSignIn} = useAuth();
+
   return (
     <div className="mt-16 mb-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
       {/* Sign in section */}
@@ -27,14 +31,17 @@ export default function SignIn() {
           <p className="text-base text-gray-600 dark:text-white"> or </p>
           <div className="h-px w-full bg-gray-200 dark:bg-navy-700" />
         </div> */}
-        {/* Email */}
+        <form onSubmit={handleSignIn}>
+          {/* Email */}
         <InputField
           variant="auth"
           extra="mb-3"
           label="Email*"
           placeholder="mail@simmmple.com"
           id="email"
-          type="text"
+          type="email"
+          required
+          onchange={handleSignInChange}
         />
 
         {/* Password */}
@@ -45,6 +52,8 @@ export default function SignIn() {
           placeholder="Min. 8 characters"
           id="password"
           type="password"
+          required
+          onchange={handleSignInChange}
         />
         {/* Checkbox */}
         <div className="mb-4 flex items-center justify-between px-2">
@@ -61,9 +70,10 @@ export default function SignIn() {
             Forgot Password?
           </a>
         </div>
-        <button className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200">
+        <button className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200" type="submit">
           Sign In
         </button>
+        </form>
         <div className="mt-4">
           <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
             Not registered yet?
