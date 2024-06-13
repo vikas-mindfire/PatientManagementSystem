@@ -45,6 +45,11 @@ const useAuth = () => {
     });
   };
 
+  const handleLogOut = () => {
+    localStorage.clear()
+    navigate('/')
+  }
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     const errors = {};
@@ -123,7 +128,8 @@ const useAuth = () => {
     signUpErrors,
     signInForm,
     handleSignInChange,
-    handleSignIn
+    handleSignIn,
+    handleLogOut
   };
 };
 

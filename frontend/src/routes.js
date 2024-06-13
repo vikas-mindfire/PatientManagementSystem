@@ -15,7 +15,7 @@ import SignUp from "views/auth/SignUp";
 // Icon Imports
 import {
   MdHome,
-  MdOutlineShoppingCart,
+  MdOutlineHealthAndSafety,
   MdBarChart,
   MdPerson,
   MdLock,
@@ -23,18 +23,18 @@ import {
 
 const routes = [
   {
-    name: "Main Dashboard",
+    name: "Dashboard",
     layout: "/admin",
     path: "default",
     icon: <MdHome className="h-6 w-6" />,
     component: <MainDashboard />,
   },
   {
-    name: "NFT Marketplace",
+    name: "Patients",
     layout: "/admin",
-    path: "nft-marketplace",
-    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
-    component: <NFTMarketplace />,
+    path: "patients",
+    icon: <MdOutlineHealthAndSafety className="h-6 w-6" />,
+    component: <DataTables />,
     secondary: true,
   },
   {
@@ -42,7 +42,7 @@ const routes = [
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
     path: "data-tables",
-    component: <DataTables />,
+    component: <NFTMarketplace />,
   },
   {
     name: "Profile",
