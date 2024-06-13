@@ -1,4 +1,7 @@
 import { useState } from "react";
+import authService from "services/auth";
+import { useNavigate } from 'react-router-dom';
+import {useToast} from "@chakra-ui/toast";
 
 const initalSignupState = {
   firstName: "",
@@ -14,12 +17,14 @@ const initialSignInState = {
 };
 
 const useAuth = () => {
+  const navigate = useNavigate();
+  const toast = useToast()
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("token") ?? false
   );
   const [loading, setLoading] = useState(false);
   const [signInForm, setSignInForm] = useState({ ...initialSignInState });
-  const [signUpForm, setSignupForm] = useState({ ...initialSignInState });
+  const [signUpForm, setSignupForm] = useState({ ...initalSignupState });
   const [signUpErrors, setSignUpErrors] = useState({});
 
   const handleSignUpFormChange = (e) => {
@@ -40,7 +45,7 @@ const useAuth = () => {
     });
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     const errors = {};
     if (!signUpForm.firstName) errors.firstName = "First Name is required";
@@ -58,15 +63,52 @@ const useAuth = () => {
       errors.cpassword = "Password and Confirm Password should be same";
     setSignUpErrors(errors);
     if (Object.keys(errors).length === 0) {
-      // API call to sign up
-      console.log("api call");
+      const response = await authService.register({ data: signUpForm})
+      if (response.status === 201) {
+        toast({
+          title: 'Successfully Registered.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+        navigate('/auth/sign-in')
+      } else if (response.status === 400 ) {
+        toast({
+          title: response?.data?.message ?? 'Please enter valid data',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top'
+        })
+      }
     }
   };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     if (signInForm.email && signInForm.password) {
-      // API call to sign in
+      const response = await authService.login({ data: signInForm})
+      if (response.status === 200) {
+        toast({
+          title: 'Successfully Logged In.',
+          status: 'success',
+          duration: 3000,
+          position: 'top',
+          isClosable: true,
+        })
+        const { token } = response.data
+        localStorage.setItem('token', token)
+        navigate('/admin')
+      } else if (response.status === 400) {
+        toast({
+          title: 'Invalid Credentials.',
+          description: 'Try changing username or password',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top'
+        })
+      }
     }
   }
 

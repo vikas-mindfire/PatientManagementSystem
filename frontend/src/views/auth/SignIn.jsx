@@ -40,8 +40,9 @@ export default function SignIn() {
           placeholder="mail@simmmple.com"
           id="email"
           type="email"
+          name="email"
           required
-          onchange={handleSignInChange}
+          onChange={handleSignInChange}
         />
 
         {/* Password */}
@@ -52,8 +53,9 @@ export default function SignIn() {
           placeholder="Min. 8 characters"
           id="password"
           type="password"
+          name="password"
           required
-          onchange={handleSignInChange}
+          onChange={handleSignInChange}
         />
         {/* Checkbox */}
         <div className="mb-4 flex items-center justify-between px-2">
