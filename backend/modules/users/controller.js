@@ -12,15 +12,13 @@ const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   if (!firstName || !email || !password) {
-    res.status(400);
-    throw new Error("Please add all fields");
+    return res.status(400).json({'message': 'All Fields are required'});
   }
 
   // check if user exists
   const userExists = await User.findOne({ email });
   if (userExists) {
-    res.status(400);
-    throw new Error("User already exists");
+    return res.status(400).json({'message': 'Email already exists'});
   }
 
   // create hash password
@@ -36,16 +34,15 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    res.status(201).json({
+    return res.status(201).json({
       _id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      token: generateToken(user._id),
+      // token: generateToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    return res.status(400).json({'message': 'Invalid user data. something looks wrong'})
   }
 });
 
@@ -67,8 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid credentials");
+    res.status(400).json({'message': 'Invalid credentials'});
   }
 });
 
