@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const port = 5000;
 const connectDB = require('./config/db');
+const cors = require('cors');
 
 connectDB();
 
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+app.use(cors());
 
 // middlewares
 const middleware = require('./middleware')
