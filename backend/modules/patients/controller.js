@@ -15,11 +15,42 @@ const getPatients = asyncHanlder(async (req, res) => {
     }
 
     let sortQuery = {};
-    if (req.query.sortBy) {
-      sortQuery[req.query.sortBy] = req.query.sortDir === 'desc' ? -1 : 1;
-    }
+    sortQuery[req?.query?.sortBy ?? 'updatedAt'] = req.query.sortDir === 'desc' ? -1 : 1;
 
-    const patients = await Patient.find(query).sort(sortQuery);
+    const patients = await  Patient.aggregate([
+      { $match: query }, // Match the patients based on the search query
+      {
+        $lookup: {
+          from: 'appointments', // Assuming your appointments collection is named 'appointments'
+          localField: 'appointments',
+          foreignField: '_id',
+          as: 'appointmentsData'
+        }
+      },
+      {
+        $unwind: {
+          path: '$appointmentsData',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $sort: {
+          'appointmentsData.date': -1
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          firstName: { $first: '$firstName' },
+          lastName: { $first: '$lastName' },
+          dateOfBirth: { $first: '$dateOfBirth' },
+          gender: { $first: '$gender' },
+          createdBy: { $first: '$createdBy' },
+          latestAppointment: { $first: '$appointmentsData' }
+        }
+      },
+      { $sort: sortQuery } // Sort the result based on the provided sort query
+    ]);
     res.json(patients);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -33,8 +64,9 @@ const createPatients = asyncHanlder(async (req, res) => {
   if (!firstName || !lastName || !gender || !dateOfBirth) {
     return res.status(400).json({ message: 'All fields are required' });
   }
-
   try {
+    // Assuming req.user contains the information of the current logged-in user
+    const createdBy = req.user ? req.user.id : null;
     const patient = new Patient({
       firstName,
       lastName,
@@ -42,6 +74,7 @@ const createPatients = asyncHanlder(async (req, res) => {
       dateOfBirth,
       address,
       contact,
+      createdBy: createdBy,
       medicalHistory,
       appointments
     });

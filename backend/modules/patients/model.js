@@ -14,6 +14,10 @@ const patientSchema = new mongoose.Schema({
     enum: ['Male', 'Female', 'Other'],
     required: true
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   dateOfBirth: {
     type: Date,
     required: true
@@ -51,6 +55,8 @@ const patientSchema = new mongoose.Schema({
       reason: String
     }
   ]
+}, {
+  timestamps: true,
 });
 
 const doctorSchema = new mongoose.Schema({
@@ -67,6 +73,8 @@ const doctorSchema = new mongoose.Schema({
     phone: String,
     email: String
   }
+}, {
+  timestamps: true,
 });
 
 const Patient = mongoose.model('Patient', patientSchema);
