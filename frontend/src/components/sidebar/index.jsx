@@ -22,9 +22,9 @@ const Sidebar = ({ open, onClose }) => {
         <div className="mt-1 ml-1 h-2.5 font-poppins text-[26px] font-bold uppercase text-navy-700 dark:text-white">
           PMS
         </div>
-        <div class="font-medium text-sm mt-8">Patient Management</div>
+        <div className="font-medium text-sm mt-8">Patient Management</div>
       </div>
-      <div class="mt-[58px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
+      <div className="mt-[58px] mb-7 h-px bg-gray-300 dark:bg-white/30" />
       {/* Nav item */}
 
       <ul className="mb-auto pt-1">
