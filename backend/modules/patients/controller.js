@@ -39,13 +39,28 @@ const getPatients = asyncHanlder(async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'users', // Assuming your users collection is named 'users'
+          localField: 'createdBy',
+          foreignField: '_id',
+          as: 'createdByData'
+        }
+      },
+      {
+        $unwind: {
+          path: '$createdByData',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
         $group: {
           _id: '$_id',
           firstName: { $first: '$firstName' },
           lastName: { $first: '$lastName' },
           dateOfBirth: { $first: '$dateOfBirth' },
           gender: { $first: '$gender' },
-          createdBy: { $first: '$createdBy' },
+          createdByFirstName: { $first: '$createdByData.firstName' },
+          createdByLastName: { $first: '$createdByData.lastName' },
           latestAppointment: { $first: '$appointmentsData' }
         }
       },

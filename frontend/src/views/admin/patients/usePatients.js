@@ -41,8 +41,8 @@ const usePatients = (getPatients = false) => {
       accessor: "gender",
     },
     {
-      Header: "Created By",
-      accessor: "createdBy",
+      Header: "Added By",
+      accessor: (row) => `${row.createdByFirstName} ${row.createdByLastName}`,
     },
     {
       Header: "Lastest Apointment",
