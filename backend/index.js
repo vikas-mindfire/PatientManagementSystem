@@ -20,7 +20,7 @@ middleware.forEach((item) => app.use(item))
 // routers
 app.use('/patients', require('./modules/patients/route'))
 app.use('/users', require('./modules/users/route'))
-
+app.use('/appointments', require('./modules/appointments/route'))
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

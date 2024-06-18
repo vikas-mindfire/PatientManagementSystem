@@ -30,7 +30,16 @@ const patientSchema = new mongoose.Schema({
     zipCode: String
   },
   contact: {
-    phone: String,
+    phone: {
+      type: String,
+      validate: {
+        validator: function(value) {
+          if (value) return /^[0-9]{10}$/.test(value); // Validate a 10-digit phone number
+          return true
+        },
+        message: 'Phone number must be a valid 10-digit number'
+      }
+    },
     email: {
       type: String,
       validate: {
@@ -43,12 +52,24 @@ const patientSchema = new mongoose.Schema({
   },
   medicalHistory: [
     {
-      condition: String,
-      diagnosisDate: Date,
+      condition: {
+        type: String,
+        required: true
+      },
+      diagnosisDate: {
+        type: Date,
+        required: true
+      },
       treatments: [
         {
-          name: String,
-          date: Date
+          name: {
+            type: String,
+            required: true
+          },
+          date: {
+            type: Date,
+            required: true
+          }
         }
       ]
     }
@@ -57,10 +78,17 @@ const patientSchema = new mongoose.Schema({
     {
       doctor: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Doctor'
+        ref: 'Doctor',
+        required: true
       },
-      date: Date,
-      reason: String,
+      date: {
+        type: Date,
+        required: true
+      },
+      reason: {
+        type: String,
+        required: true
+      },
       notes: String
     }
   ]
