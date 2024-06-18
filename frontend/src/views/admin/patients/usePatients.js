@@ -3,8 +3,10 @@ import patientService from "services/patients";
 import { differenceInYears, parseISO } from "date-fns";
 import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import DeletePatientModal from "./components/DeletePatient";
-import { MdEdit, MdOutlineHealthAndSafety } from "react-icons/md";
+import { MdOutlineHealthAndSafety } from "react-icons/md";
 import { FaBookMedical } from "react-icons/fa";
+import EditPatientModal from "./components/AddEditPatient";
+
 const usePatients = (getPatients = false) => {
   const [patients, setPatients] = useState([]);
 
@@ -50,17 +52,7 @@ const usePatients = (getPatients = false) => {
       Header: "Action",
       accessor: (row) => (
         <Box as="span">
-          <Tooltip hasArrow label="Edit" bg="blue.600">
-            <IconButton
-              colorScheme="blue"
-              aria-label="edit patient"
-              isRound
-              variant={"ghost"}
-              // onClick={handleOpen}
-              icon={<MdEdit />}
-            />
-          </Tooltip>
-
+          <EditPatientModal patientId={row._id} fetchPatients={fetchPatients} />
           <Tooltip hasArrow label="Medical History" bg="pink.600">
             <IconButton
               colorScheme="pink"
@@ -94,13 +86,26 @@ const usePatients = (getPatients = false) => {
     }
   }
 
+  const onEdit = async (patientId, formData) => {
+    const { createdAt, __v, _id, updatedAt, ...restData } = formData
+    const response = await patientService.updatePatient(patientId, { data: restData })
+    if (response?.status === 200) {
+      return true
+    }
+  }
+
+  const getPatientById = useCallback(async (patientId) => {
+    const response = await patientService.getPatientById(patientId)
+    if (response?.data) return response.data
+  }, [])
+
   useEffect(() => {
     if (getPatients) {
       fetchPatients();
     }
   }, [getPatients, fetchPatients]);
 
-  return { patients, columns, onAdd, fetchPatients, handleDelete };
+  return { patients, columns, onAdd, fetchPatients, handleDelete, getPatientById, onEdit };
 };
 
 export default usePatients;

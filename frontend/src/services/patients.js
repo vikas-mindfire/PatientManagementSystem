@@ -24,10 +24,28 @@ const deletePatient = async(patientId) => {
   }
 }
 
+const getPatientById = async(patientId) => {
+  try {
+    return await apiClient.get(`/patients/${patientId}`)
+  } catch (error) {
+    return error?.response
+  }
+}
+
+const updatePatient = async(patientId, data) => {
+  try {
+    return await apiClient.put(`/patients/${patientId}`, data.data)
+  } catch (error) {
+    return error?.response
+  }
+}
+
 const patientService = {
   getAllPatients,
   addPatients,
-  deletePatient
+  deletePatient,
+  getPatientById,
+  updatePatient
 }
 
 export default patientService

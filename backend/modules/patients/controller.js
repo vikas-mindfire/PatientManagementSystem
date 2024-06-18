@@ -57,6 +57,20 @@ const getPatients = asyncHanlder(async (req, res) => {
   }
 });
 
+const getPatientById = asyncHanlder(async (req, res) => {
+  const id = req.params.id;
+  try {
+    const patient = await Patient.findById(id);
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
+    res.json(patient);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+})
+
 const createPatients = asyncHanlder(async (req, res) => {
   const { firstName, lastName, gender, dateOfBirth, address, contact, medicalHistory, appointments } = req.body;
 
@@ -144,5 +158,6 @@ module.exports = {
   getPatients,
   createPatients,
   updatePatient,
-  deletePatient
+  deletePatient,
+  getPatientById
 }

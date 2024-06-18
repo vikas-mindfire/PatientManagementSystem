@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Button,
   Modal,
@@ -17,14 +17,15 @@ import {
   InputGroup,
   InputLeftAddon,
   useToast,
+  IconButton, Tooltip,
   useOutsideClick,
 } from "@chakra-ui/react";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdEdit } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { Calendar } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { format } from "date-fns";
 import usePatients from "../usePatients";
 
@@ -46,7 +47,7 @@ const initialState = {
   },
 };
 
-function AddPatientModal({ fetchPatients }) {
+function AddPatientModal({ fetchPatients, patientId }) {
   const [isOpen, setOpen] = useState(false);
   const [showCalender, setShowCalender] = useState();
   const ref = useRef();
@@ -56,7 +57,7 @@ function AddPatientModal({ fetchPatients }) {
     handler: () => setShowCalender(false),
   });
 
-  const { onAdd } = usePatients();
+  const { onAdd, getPatientById, onEdit } = usePatients();
 
   const onClose = () => setOpen(false);
 
@@ -132,8 +133,8 @@ function AddPatientModal({ fetchPatients }) {
       });
       return;
     }
-    // Call the onAdd function and pass the form data
-    const response = await onAdd(formData);
+    // Call the function and pass the form data
+    const response = patientId ? await onEdit(patientId, formData) : await onAdd(formData);
     if (response) {
       setFormData({ ...initialState });
       if (fetchPatients) fetchPatients();
@@ -141,20 +142,48 @@ function AddPatientModal({ fetchPatients }) {
     }
   };
 
+  const getPatientData = useCallback(async () => {
+    const response = await getPatientById(patientId)
+    if (response) {
+      const data = {
+        ...response,
+        dateOfBirth: format(new Date(response.dateOfBirth), "yyyy-MM-dd")
+      }
+      setFormData(data)
+    }
+  }, [patientId, getPatientById])
+
+  useEffect(() => {
+    if (isOpen) {
+      getPatientData()
+    }
+  }, [patientId, isOpen, getPatientData])
+
   return (
     <>
-      <button
+    {
+      patientId ? <Tooltip hasArrow label="Edit" bg="blue.600">
+      <IconButton
+        colorScheme="blue"
+        aria-label="edit patient"
+        isRound
+        variant={"ghost"}
+        onClick={() => setOpen(true)}
+        icon={<MdEdit />}
+      />
+    </Tooltip> : <button
         className="linear flex items-center rounded-[20px] bg-brand-900 px-4 py-2 text-base font-medium text-white transition duration-200 hover:bg-brand-800 active:bg-brand-700 dark:bg-brand-400 dark:hover:bg-brand-300 dark:active:opacity-90"
         onClick={() => setOpen(true)}
       >
         {" "}
         <MdAdd className="mr-1 text-xl" /> <span> Add Patient</span>{" "}
       </button>
+    }
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add Patient</ModalHeader>
+          <ModalHeader>{ patientId ? 'Edit' : 'Add'} Patient</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit}>
             <ModalBody>
@@ -302,7 +331,7 @@ function AddPatientModal({ fetchPatients }) {
 
             <ModalFooter>
               <Button colorScheme="blue" mr={3} type="submit">
-                Add
+                { patientId ? 'Save' : 'Add'}
               </Button>
               <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
