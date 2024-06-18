@@ -9,7 +9,7 @@ const {
   deletePatient
 } = require('./controller')
 
-router.route('/').get( getPatients).post(protect, createPatients)
+router.route('/').get(protect, getPatients).post(protect, createPatients)
 router.route('/:id').put(protect, updatePatient).delete(protect, deletePatient)
 
 module.exports = router;

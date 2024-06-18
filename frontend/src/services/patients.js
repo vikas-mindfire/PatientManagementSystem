@@ -8,9 +8,9 @@ const getAllPatients = async() => {
   }
 }
 
-const login = async({ data }) => {
+const addPatients = async({ data }) => {
   try {
-    return await apiClient.post('/users/login', { ...data})
+    return await apiClient.post('/patients', { ...data})
   } catch (error) {
     return error?.response
   }
@@ -18,7 +18,7 @@ const login = async({ data }) => {
 
 const patientService = {
   getAllPatients,
-  login
+  addPatients
 }
 
 export default patientService

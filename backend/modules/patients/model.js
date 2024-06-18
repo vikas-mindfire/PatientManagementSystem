@@ -31,7 +31,15 @@ const patientSchema = new mongoose.Schema({
   },
   contact: {
     phone: String,
-    email: String
+    email: {
+      type: String,
+      validate: {
+        validator: function (value) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        },
+        message: 'Invalid email address format',
+      }
+    }
   },
   medicalHistory: [
     {
@@ -52,7 +60,8 @@ const patientSchema = new mongoose.Schema({
         ref: 'Doctor'
       },
       date: Date,
-      reason: String
+      reason: String,
+      notes: String
     }
   ]
 }, {

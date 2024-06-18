@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import authService from "services/auth";
 import { useNavigate } from 'react-router-dom';
 import {useToast} from "@chakra-ui/toast";
+import apiClient from "services";
 
 const initalSignupState = {
   firstName: "",
@@ -26,6 +27,12 @@ const useAuth = () => {
   const [signInForm, setSignInForm] = useState({ ...initialSignInState });
   const [signUpForm, setSignupForm] = useState({ ...initalSignupState });
   const [signUpErrors, setSignUpErrors] = useState({});
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${isAuthenticated}`;
+    }
+  }, [isAuthenticated]);
 
   const handleSignUpFormChange = (e) => {
     const name = e.target.name;

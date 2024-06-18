@@ -61,7 +61,7 @@ const createPatients = asyncHanlder(async (req, res) => {
   const { firstName, lastName, gender, dateOfBirth, address, contact, medicalHistory, appointments } = req.body;
 
   // Validate request body
-  if (!firstName || !lastName || !gender || !dateOfBirth) {
+  if (!firstName || !gender || !dateOfBirth || !contact.email ) {
     return res.status(400).json({ message: 'All fields are required' });
   }
   try {

@@ -59,12 +59,11 @@ const PatientTable = ({ patients, columns }) => {
             return (
               <tr {...row.getRowProps()} key={index}>
                 {row.cells.map((cell, index) => {
-                  console.log(cell)
                   let data = "";
                   if (cell.column.Header === "Full Name") {
                     data = (
                       <div className="flex items-center gap-2">
-                        <Checkbox />
+                        {/* <Checkbox /> */}
                         <p className="text-sm font-bold text-navy-700 dark:text-white capitalize">
                           {cell.value}
                         </p>
