@@ -96,25 +96,6 @@ const patientSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-const doctorSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  specialization: String,
-  contact: {
-    phone: String,
-    email: String
-  }
-}, {
-  timestamps: true,
-});
-
 const Patient = mongoose.model('Patient', patientSchema);
-const Doctor = mongoose.model('Doctor', doctorSchema);
 
-module.exports = { Patient, Doctor };
+module.exports = { Patient };
