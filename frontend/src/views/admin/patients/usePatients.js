@@ -7,12 +7,18 @@ import { MdEdit, MdOutlineHealthAndSafety } from "react-icons/md";
 import { FaBookMedical } from "react-icons/fa";
 const usePatients = (getPatients = false) => {
   const [patients, setPatients] = useState([]);
-  // delete patient
-  const [isOpen, setIsOpen] = useState(false);
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
-  const handleDelete = () => {
-    setIsOpen(false);
+
+  const fetchPatients = useCallback(async () => {
+    const response = await patientService.getAllPatients();
+    if (response?.data) setPatients(response.data);
+  }, []);
+
+  const handleDelete = async (patientId) => {
+    const response = await patientService.deletePatient(patientId)
+    if (response.status === 200) {
+      fetchPatients()
+      return true
+    }
   };
 
   const columns = [
@@ -50,7 +56,7 @@ const usePatients = (getPatients = false) => {
               aria-label="edit patient"
               isRound
               variant={"ghost"}
-              onClick={handleOpen}
+              // onClick={handleOpen}
               icon={<MdEdit />}
             />
           </Tooltip>
@@ -61,7 +67,7 @@ const usePatients = (getPatients = false) => {
               aria-label="medical history"
               isRound
               variant={"ghost"}
-              onClick={handleOpen}
+              // onClick={handleOpen}
               icon={<FaBookMedical />}
             />
           </Tooltip>
@@ -71,20 +77,15 @@ const usePatients = (getPatients = false) => {
               aria-label="medical history"
               isRound
               variant={"ghost"}
-              onClick={handleOpen}
+              // onClick={handleOpen}
               icon={<MdOutlineHealthAndSafety />}
             />
           </Tooltip>
-          <DeletePatientModal patientId={row._id} />
+          <DeletePatientModal patientId={row._id} handleDelete={handleDelete} />
         </Box>
       ),
     },
   ];
-
-  const fetchPatients = useCallback(async () => {
-    const response = await patientService.getAllPatients();
-    if (response?.data) setPatients(response.data);
-  }, []);
 
   const onAdd = async (formData) => {
     const response = await patientService.addPatients({ data: formData })
@@ -99,7 +100,7 @@ const usePatients = (getPatients = false) => {
     }
   }, [getPatients, fetchPatients]);
 
-  return { patients, isOpen, handleOpen, handleClose, handleDelete, columns, onAdd, fetchPatients };
+  return { patients, columns, onAdd, fetchPatients, handleDelete };
 };
 
 export default usePatients;

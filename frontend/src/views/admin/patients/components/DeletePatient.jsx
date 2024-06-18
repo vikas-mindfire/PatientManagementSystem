@@ -8,15 +8,30 @@ import {
   ModalBody,
   ModalCloseButton,
   IconButton,
+  Tooltip
 } from "@chakra-ui/react";
-import usePatients from "../usePatients";
 import { MdDelete } from "react-icons/md";
+import { useState } from "react";
 
-function DeletePatientModal({ patientId }) {
-  const { isOpen, handleOpen, handleClose, handleDelete } = usePatients();
+function DeletePatientModal({ patientId, handleDelete  }) {
+
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
+
+  const onDeleteClick = () => {
+    if (handleDelete && patientId) {
+      const isDeleted = handleDelete(patientId);
+      if (isDeleted) {
+        handleClose()
+      }
+    } 
+  }
+  
   return (
     <>
-      <IconButton
+    <Tooltip hasArrow label='Delete Patient' bg='red.600'>
+    <IconButton
         colorScheme="red"
         aria-label="delete patient"
         isRound
@@ -24,6 +39,7 @@ function DeletePatientModal({ patientId }) {
         onClick={handleOpen}
         icon={<MdDelete />}
       />
+    </Tooltip>
       <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent>
@@ -32,7 +48,7 @@ function DeletePatientModal({ patientId }) {
           <ModalBody>Are you sure you want to delete this patient?</ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleDelete}>
+            <Button colorScheme="red" mr={3} onClick={onDeleteClick}>
               Delete
             </Button>
             <Button onClick={handleClose}>Cancel</Button>
