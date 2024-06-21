@@ -4,7 +4,7 @@ import { useDisclosure} from "@chakra-ui/react";
 import appointmentService from "services/appointment";
 import { useToast } from "@chakra-ui/react";
 
-const useAppointment = () => {
+const useAppointment = ({ fetchInfo }) => {
 
   const [ doctors, setDoctors] = useState([])
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -17,7 +17,6 @@ const useAppointment = () => {
 
   const onAddAppointment = async (patientId, formData) => {
     const response = await appointmentService.addAppointment(patientId, { data: formData})
-    console.log(response)
     if (response.status === 201) {
       toast({
         title: "Appointment is successfully added.",
@@ -25,6 +24,9 @@ const useAppointment = () => {
         duration: 5000,
         isClosable: true,
       });
+      if (fetchInfo) {
+        fetchInfo()
+      }
       onClose();
       return true
     }

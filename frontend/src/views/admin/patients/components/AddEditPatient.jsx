@@ -40,7 +40,7 @@ const initialState = {
     city: "",
     state: "",
     country: "",
-    zipcode: "",
+    zipCode: "",
   },
 };
 
@@ -289,9 +289,9 @@ function AddPatientModal({ fetchPatients, patientId }) {
                       />
                       <Input
                         type="text"
-                        name="zipcode"
+                        name="zipCode"
                         placeholder="Zipcode"
-                        value={formData.address.zipcode}
+                        value={formData.address.zipCode}
                         onChange={handleAddressChange}
                       />
                     </Box>

@@ -29,9 +29,9 @@ const initialState = {
   notes: "",
 }
 
-const AppointmentForm = ({ patientId }) => {
+const AppointmentForm = ({ patientId, inInfoPage, fetchInfo }) => {
 
-  const { doctors, isOpen, onOpen, onClose, onAddAppointment } = useAppointment()
+  const { doctors, isOpen, onOpen, onClose, onAddAppointment } = useAppointment({ fetchInfo })
   const [formData, setFormData] = useState({ ...initialState});
 
   const handleChange = (e) => {
@@ -60,7 +60,10 @@ const AppointmentForm = ({ patientId }) => {
 
   return (
     <>
-      <Tooltip hasArrow label="Add Appointments" bg="green.500">
+    {
+      inInfoPage ? <Button colorScheme="green" leftIcon={<MdOutlineHealthAndSafety />} onClick={onOpen}>
+        Add Appointment
+      </Button> : <Tooltip hasArrow label="Add Appointments" bg="green.500">
         <IconButton
           colorScheme="green"
           aria-label="Appointments"
@@ -70,6 +73,7 @@ const AppointmentForm = ({ patientId }) => {
           icon={<MdOutlineHealthAndSafety />}
         />
       </Tooltip>
+    }
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

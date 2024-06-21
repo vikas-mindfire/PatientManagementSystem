@@ -15,7 +15,7 @@ import { Calendar } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 
-const DatePickerField = ({ value, handleDateChange, inputProps={}, label, datePickerProps={} }) => {
+const DatePickerField = ({ value, handleDateChange, isRequired=true, inputProps={}, label, datePickerProps={} }) => {
 
   const [showCalender, setShowCalender] = useState();
   const ref = useRef();
@@ -32,8 +32,10 @@ const DatePickerField = ({ value, handleDateChange, inputProps={}, label, datePi
   }
 
 
-  return (<FormControl isRequired className="relative" ref={ref}>
-  <FormLabel>{ label }</FormLabel>
+  return (<FormControl isRequired={isRequired} className="relative" ref={ref}>
+  {
+    label ? <FormLabel>{ label }</FormLabel> : ''
+  }
   <InputGroup
     onClick={() => setShowCalender(true)}
     className="cursor-pointer"

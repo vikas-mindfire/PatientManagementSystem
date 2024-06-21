@@ -20,11 +20,19 @@ const usePatientInfo = () => {
 
   }, [patientInfo])
 
+  const getMedicalHistory = useMemo(() => {
+    if (patientInfo) {
+      return patientInfo.medicalHistory
+    }
+    return []
+
+  }, [patientInfo])
+
   useEffect(() => {
     getPatiendInfo()
   }, [patientId, getPatiendInfo])
 
-  return { patientInfo, getAppointments}
+  return { patientInfo, getAppointments, getPatiendInfo, getMedicalHistory}
 }
 
 export default usePatientInfo;

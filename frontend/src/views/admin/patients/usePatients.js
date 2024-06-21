@@ -3,12 +3,13 @@ import patientService from "services/patients";
 import { differenceInYears, parseISO } from "date-fns";
 import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import DeletePatientModal from "./components/DeletePatient";
-import { FaBookMedical, FaInfo } from "react-icons/fa";
+import { FaInfo } from "react-icons/fa";
 import EditPatientModal from "./components/AddEditPatient";
 import AppointmentForm from "./components/AddAppointment";
 import format from "date-fns/format";
 import debounce from 'debounce';
 import { useNavigate } from "react-router-dom";
+import MedicalHistoryModal from "./components/AddMedicalHistory";
 
 const usePatients = (getPatients = false) => {
   const [patients, setPatients] = useState([]);
@@ -78,17 +79,8 @@ const usePatients = (getPatients = false) => {
               icon={<FaInfo />}
             />
           </Tooltip>
-          <Tooltip hasArrow label="Medical History" bg="pink.600">
-            <IconButton
-              colorScheme="pink"
-              aria-label="medical history"
-              isRound
-              variant={"ghost"}
-              // onClick={handleOpen}
-              icon={<FaBookMedical />}
-            />
-          </Tooltip>
-          <AppointmentForm patientId={row._id} />
+          <MedicalHistoryModal patientId={row._id} />
+          <AppointmentForm patientId={row._id} fetchInfo={fetchPatients} />
           <DeletePatientModal patientId={row._id} handleDelete={handleDelete} />
         </Box>
       ),

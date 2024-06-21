@@ -1,8 +1,8 @@
 import apiClient from "services";
 
-const getAllAppointments = async() => {
+const getAllAppointments = async(pateintId) => {
   try {
-    return await apiClient.get('/doctors')
+    return await apiClient.get(`/appointments/${pateintId}`)
   } catch (error) {
     return error?.response
   }
