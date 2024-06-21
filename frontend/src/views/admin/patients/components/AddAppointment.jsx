@@ -60,9 +60,9 @@ const AppointmentForm = ({ patientId }) => {
 
   return (
     <>
-      <Tooltip hasArrow label="Add Appointments" bg="pink.600">
+      <Tooltip hasArrow label="Add Appointments" bg="green.500">
         <IconButton
-          colorScheme="pink"
+          colorScheme="green"
           aria-label="Appointments"
           isRound
           variant={"ghost"}

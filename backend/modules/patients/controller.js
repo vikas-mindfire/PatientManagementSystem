@@ -68,7 +68,11 @@ const getPatients = asyncHanlder(async (req, res) => {
 const getPatientById = asyncHanlder(async (req, res) => {
   const id = req.params.id;
   try {
-    const patient = await Patient.findById(id);
+    const patient = await Patient.findById(id).populate({
+      path: 'appointments.doctor', // Populate the doctor field in appointments
+      model: 'Doctor', // Specify the model to use for population
+      select: 'firstName lastName' // Select the fields you want to include
+    });
     if (!patient) {
       return res.status(404).json({ message: 'Patient not found' });
     }

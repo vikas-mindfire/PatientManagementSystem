@@ -7,6 +7,7 @@ import Profile from "views/admin/profile";
 import DataTables from "views/admin/tables";
 import RTLDefault from "views/rtl/default";
 import Patients from "views/admin/patients"
+import PatientInfoPage from "views/admin/patientInfo";
 
 // Auth Imports
 import SignIn from "views/auth/SignIn";
@@ -30,14 +31,23 @@ const routes = [
     path: "default",
     icon: <MdHome className="h-6 w-6" />,
     component: <MainDashboard />,
+    hideRoute: true
   },
   {
     name: "Patients",
     layout: "/admin",
     path: "patients",
     icon: <FaUsers className="h-6 w-6" />,
-    component: <Patients />,
-    secondary: true,
+    component: <Patients />
+  },
+  {
+    name: "PatientsInfo",
+    layout: "/admin",
+    path: "patients/:patientId",
+    icon: <FaUsers className="h-6 w-6" />,
+    component: <PatientInfoPage />,
+    hideRoute: true,
+    secondary: true
   },
   {
     name: "NFT",
@@ -45,6 +55,7 @@ const routes = [
     icon: <MdBarChart className="h-6 w-6" />,
     path: "nft",
     component: <NFTMarketplace />,
+    hideRoute: true
   },
   {
     name: "Data Tables",
@@ -52,6 +63,7 @@ const routes = [
     icon: <MdBarChart className="h-6 w-6" />,
     path: "data-tables",
     component: <DataTables />,
+    hideRoute: true
   },
   {
     name: "Profile",
@@ -59,6 +71,7 @@ const routes = [
     path: "profile",
     icon: <MdPerson className="h-6 w-6" />,
     component: <Profile />,
+    hideRoute: true
   },
   {
     name: "Sign In",
