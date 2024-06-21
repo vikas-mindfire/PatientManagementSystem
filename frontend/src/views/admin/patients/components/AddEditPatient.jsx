@@ -17,17 +17,14 @@ import {
   InputGroup,
   InputLeftAddon,
   useToast,
-  IconButton, Tooltip,
-  useOutsideClick,
+  IconButton,
+  Tooltip
 } from "@chakra-ui/react";
 import { MdAdd, MdEdit } from "react-icons/md";
-import { FaCalendarAlt } from "react-icons/fa";
-import { Calendar } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { format } from "date-fns";
 import usePatients from "../usePatients";
+import DatePickerField from "components/fields/DatePickerField";
 
 const initialState = {
   firstName: "",
@@ -49,13 +46,6 @@ const initialState = {
 
 function AddPatientModal({ fetchPatients, patientId }) {
   const [isOpen, setOpen] = useState(false);
-  const [showCalender, setShowCalender] = useState();
-  const ref = useRef();
-
-  useOutsideClick({
-    ref: ref,
-    handler: () => setShowCalender(false),
-  });
 
   const { onAdd, getPatientById, onEdit } = usePatients();
 
@@ -77,7 +67,6 @@ function AddPatientModal({ fetchPatients, patientId }) {
       ...prevState,
       dateOfBirth: format(date, "yyyy-MM-dd"),
     }));
-    setShowCalender(false);
   };
 
   const handleAddressChange = (e) => {
@@ -136,6 +125,12 @@ function AddPatientModal({ fetchPatients, patientId }) {
     // Call the function and pass the form data
     const response = patientId ? await onEdit(patientId, formData) : await onAdd(formData);
     if (response) {
+      toast({
+        title: "Patient is successfully added.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       setFormData({ ...initialState });
       if (fetchPatients) fetchPatients();
       onClose(); // Close the modal
@@ -225,37 +220,13 @@ function AddPatientModal({ fetchPatients, patientId }) {
                     <option value="Other">Other</option>
                   </Select>
                 </FormControl>
-                <FormControl isRequired className="relative" ref={ref}>
-                  <FormLabel htmlFor="dateOfBirth">Date of Birth</FormLabel>
-                  <InputGroup
-                    onClick={() => setShowCalender(true)}
-                    className="cursor-pointer"
-                  >
-                    <InputLeftAddon>
-                      <FaCalendarAlt />
-                    </InputLeftAddon>
-                    <Input
-                      type="date"
-                      value={formData.dateOfBirth}
-                      isReadOnly
-                      placeholder="Date Of Birth"
-                      name="dateOfBirth"
-                      id="dateOfBirth"
-                    />
-                  </InputGroup>
-                  {showCalender && (
-                    <Box
-                      className="absolute top-20 right-0 z-[1] flex w-full items-center justify-center"
-                      as="div"
-                    >
-                      <Calendar
-                        date={new Date()}
-                        onChange={handleDateChange}
-                        maxDate={new Date()}
-                      />
-                    </Box>
-                  )}
-                </FormControl>
+
+                <DatePickerField value={formData.dateOfBirth} label={'Date Of Birth'} handleDateChange={handleDateChange} inputProps={{
+                      placeholder:"Date Of Birth",
+                      name:"dateOfBirth",
+                      id:"dateOfBirth"
+              }} />
+
                 <FormControl isRequired>
                   <FormLabel>Contact Info</FormLabel>
                   <Box as="div" className="grid grid-cols-2 gap-4">

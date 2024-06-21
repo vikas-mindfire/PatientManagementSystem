@@ -3,17 +3,29 @@ import patientService from "services/patients";
 import { differenceInYears, parseISO } from "date-fns";
 import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import DeletePatientModal from "./components/DeletePatient";
-import { MdOutlineHealthAndSafety } from "react-icons/md";
 import { FaBookMedical } from "react-icons/fa";
 import EditPatientModal from "./components/AddEditPatient";
+import AppointmentForm from "./components/AddAppointment";
+import format from "date-fns/format";
+import debounce from 'debounce';
 
 const usePatients = (getPatients = false) => {
   const [patients, setPatients] = useState([]);
+  const [ search, setSearch ] = useState('')
 
   const fetchPatients = useCallback(async () => {
-    const response = await patientService.getAllPatients();
+    let query = ''
+    if (search.length > 0) {
+      query += `search=${search}`
+    }
+    const response = await patientService.getAllPatients(query);
     if (response?.data) setPatients(response.data);
-  }, []);
+  }, [search]);
+
+  const handleSearch = debounce((e) => {
+    const value = e.target.value;
+    setSearch(value)
+  }, 500)
 
   const handleDelete = async (patientId) => {
     const response = await patientService.deletePatient(patientId)
@@ -46,7 +58,7 @@ const usePatients = (getPatients = false) => {
     },
     {
       Header: "Lastest Apointment",
-      accessor: "latestAppointment",
+      accessor: (row) => `${row.latestAppointment?.date ? format(new Date(row.latestAppointment?.date), 'dd-MM-yyyy') : 'No Appointment'}`,
     },
     {
       Header: "Action",
@@ -63,16 +75,7 @@ const usePatients = (getPatients = false) => {
               icon={<FaBookMedical />}
             />
           </Tooltip>
-          <Tooltip hasArrow label="Appointments" bg="pink.600">
-            <IconButton
-              colorScheme="pink"
-              aria-label="medical history"
-              isRound
-              variant={"ghost"}
-              // onClick={handleOpen}
-              icon={<MdOutlineHealthAndSafety />}
-            />
-          </Tooltip>
+          <AppointmentForm patientId={row._id} />
           <DeletePatientModal patientId={row._id} handleDelete={handleDelete} />
         </Box>
       ),
@@ -103,9 +106,9 @@ const usePatients = (getPatients = false) => {
     if (getPatients) {
       fetchPatients();
     }
-  }, [getPatients, fetchPatients]);
+  }, [getPatients, fetchPatients, search]);
 
-  return { patients, columns, onAdd, fetchPatients, handleDelete, getPatientById, onEdit };
+  return { patients, columns, onAdd, fetchPatients, handleDelete, getPatientById, onEdit, handleSearch };
 };
 
 export default usePatients;

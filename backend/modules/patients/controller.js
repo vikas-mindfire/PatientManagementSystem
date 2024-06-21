@@ -20,22 +20,15 @@ const getPatients = asyncHanlder(async (req, res) => {
     const patients = await  Patient.aggregate([
       { $match: query }, // Match the patients based on the search query
       {
-        $lookup: {
-          from: 'appointments', // Assuming your appointments collection is named 'appointments'
-          localField: 'appointments',
-          foreignField: '_id',
-          as: 'appointmentsData'
-        }
-      },
-      {
-        $unwind: {
-          path: '$appointmentsData',
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $sort: {
-          'appointmentsData.date': -1
+        $addFields: {
+          latestAppointment: {
+            $arrayElemAt: [
+              {
+                $slice: ['$appointments', -1] // Get the last element (latest) in the appointments array
+              },
+              0
+            ]
+          }
         }
       },
       {
@@ -61,7 +54,7 @@ const getPatients = asyncHanlder(async (req, res) => {
           gender: { $first: '$gender' },
           createdByFirstName: { $first: '$createdByData.firstName' },
           createdByLastName: { $first: '$createdByData.lastName' },
-          latestAppointment: { $first: '$appointmentsData' }
+          latestAppointment: { $first: '$latestAppointment' }
         }
       },
       { $sort: sortQuery } // Sort the result based on the provided sort query

@@ -1,8 +1,9 @@
 import apiClient from "services";
 
-const getAllPatients = async() => {
+const getAllPatients = async(query) => {
   try {
-    return await apiClient.get('/patients')
+    return await apiClient.get(`/patients?${query}`);
+
   } catch (error) {
     return error?.response
   }

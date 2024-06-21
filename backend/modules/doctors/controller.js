@@ -26,20 +26,14 @@ const getDoctorById = asyncHanlder(async (req, res) => {
   }
 });
 
-const createDoctors = async (req, res) => {
-  const id = req.params.id;
-
+const createDoctors = asyncHanlder(async (req, res) => {
   try {
-    const doctor = await Doctor.findById(id);
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor not found" });
-    }
-    res.json(doctor);
+    const newDoctor = await Doctor.create(req.body);
+    res.status(201).json(newDoctor);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(400).json({ message: err.message });
   }
-};
+});
 
 const updateDoctors = asyncHanlder(async (req, res) => {
   const id = req.params.id;
